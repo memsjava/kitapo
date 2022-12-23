@@ -1,2 +1,8 @@
+# Build settings
+[build]
+  command = "npm run build"
+  publish = "build"
+
+# Environment variables
 [[context.deploy.environment]]
   CI = "false"
