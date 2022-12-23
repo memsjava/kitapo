@@ -1,5 +1,9 @@
 {
   "name": "eric-portfolio",
+  "engines": {
+    "node": "14 || 15 || 16",
+    "npm": ">=6"
+  },
   "version": "0.1.0",
   "private": true,
   "dependencies": {
