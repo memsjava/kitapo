@@ -1,8 +1,14 @@
 import meter1 from "../assets/img/meter1.svg";
 import meter2 from "../assets/img/meter2.svg";
+import meter3 from "../assets/img/meter2.svg";
+
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import colorSharp from "../assets/img/color-sharp.png"
+import DoughNut from "../assets/charts/Donut";
+import DoughNut3 from "../assets/charts/Donut3";
+import DoughNut2 from "../assets/charts/Donut2";
+import DoughNut1 from "../assets/charts/Donut1";
 
 export const Skills = () => {
   const responsive = {
@@ -36,15 +42,23 @@ export const Skills = () => {
                         <Carousel responsive={responsive} infinite={true} className="owl-carousel owl-theme skill-slider">
                             <div className="item">
                                 <img src={meter1} alt="boby napedina"/>
+                                {/* <DoughNut /> */}
                                 <h5>Vola nampiasaina</h5>
                             </div>
                             <div className="item" alt="fitsinjarana">
                                 <img src={meter2} />
+                                {/* <DoughNut1 /> */}
                                 <h5>Fitsinjarana BTC / USDT</h5>
                             </div>
                             <div className="item">
-                                <img src={meter1} alt="sandany" />
+                                {/* <DoughNut3 /> */}
+                                <img src={meter2} />
                                 <h5>Sandany anio</h5>
+                            </div>
+                            <div className="item">
+                            <img src={meter2} />
+                              {/* <DoughNut2 /> */}
+                              <h5>ROI </h5>
                             </div>
                         </Carousel>
                     </div>

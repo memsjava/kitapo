@@ -56,18 +56,22 @@ export const Banner = () => {
               {({ isVisible }) =>
               <div className={isVisible ? "animate__animated animate__fadeIn" : ""}>
                 {/* <span className="tagline">Tongasoa ianao</span> */}
-                <h1>{`Salama, izaho dia robot`} <span className="txt-rotate" dataPeriod="1000" data-rotate='[ "DCA", "Crypto"]'><span className="wrap">{text}</span></span></h1>
+                <h1>{`Salama, izaho dia `} </h1>
+                <h1>{`robot`} <span className="txt-rotate"  data-rotate='[ "DCA", "Crypto"]'><span className="wrap">{text}</span></span></h1>
+
                 <br />
                 <p>
-                  Ny DCA (na "Dollar Cost Averaging") dia ny fikafika fividianana sy fanangonana asset / zavatra iray, BTC crypto ohatra
+                  Ny DCA (na "Dollar Cost Averaging") dia ny fikafika fividianana sy fanangonana zavatra iray @fotoana voafaritra, BTC ohatra.
+                  </p> 
+                  {/* <p>
+                  Ny antony dia ny hahafahana manangona tsikelikely, ary mividy amin'ny fotoana heverina fa mora indrindra noho ny fiovaovana sandan'ny BTC.
+                  </p>  */}
+                  <p>
+                    Noho ny fiovaovan'ny vidin'ny crypto isan'andro dia eto aho ary tsy matory fa miandry sy miasa mividy amin'ny fotoana heverina fa mora indrindra eo amin'ny toeranao.
                   </p> 
                   <p>
-                  Tsotra ny antony dia ny fahatahorana hividy "avo" raha mividy amin'ny fotoana iray ihany, no sady hahafahana manangona tsikelikely..
-                  </p> 
-                  <p>
-                  Noho izany, raha manao DCA ianao, dia azonao atao ny mizara ny fampiasam-bola ho ampahany kely kokoa ary mividy amin'ny fotoana samy hafa amin'ny vidiny samihafa, ka mahazo vidiny antonony tsara kokoa. </p>
-                  <p>
-                  Izaho dia robot, ary tsy matory aho fa miasa manao an'izay fanakalozana izay amin'ny toeranao.
+                    Ataovy anie ny kajy e, nandrotsaka tahiry ianao tamin'ny 10 taona lasa 10000ar / volana ka natao en usd izany, efa nahangona usd maro ianao izao. Raha androany no averina atakalo ho ariary ilay usd nangoninao tao anatin 10 taona, dia azo antoka fa mihoatra lavitra noho ilay 10000ar x 12 volana x 10 taona tsy natao usd no azonao.
+                    Satria miakatra ny sandan'ny usd. 
                   </p> 
                   {/* <button onClick={() => console.log('connect')}>Let’s Connect <ArrowRightCircle size={25} /></button> */}
               </div>}
