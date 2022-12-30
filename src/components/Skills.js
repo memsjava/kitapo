@@ -30,7 +30,7 @@ export const Skills = () => {
 
   const getData = async() =>{
     
-    await fetch("http://localhost:5000/data?email=memsjava@gmail.com")
+    await fetch("https://trano-vacance.mg/kitapo/data?email=memsjava@gmail.com")
       .then(response => response.json())
       .then(data => {
         setData(data)
