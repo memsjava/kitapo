@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 export const NavBar = () => {
-
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') || false);
   const [activeLink, setActiveLink] = useState('home');
   const [scrolled, setScrolled] = useState(false);
 
@@ -29,6 +29,15 @@ export const NavBar = () => {
     setActiveLink(value);
   }
 
+  const handleLogout = () => {
+    // Perform logout logic, then clear user's authentication state and credentials
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('username');
+    localStorage.removeItem('password');
+    setIsLoggedIn(false);
+    window.location.reload()
+  };
+
   return (
     <Router>
       <Navbar expand="md" className={scrolled ? "scrolled" : ""}>
@@ -41,9 +50,15 @@ export const NavBar = () => {
           </Navbar.Toggle>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <Nav.Link href="#home" className={activeLink === 'home' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('home')}>Robot DCA </Nav.Link>
-              <Nav.Link href="#skills" className={activeLink === 'skills' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('skills')}>Tarehimarika</Nav.Link>
-              {/* <Nav.Link href="#projects" className={activeLink === 'projects' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('projects')}>Projects</Nav.Link> */}
+              {
+                isLoggedIn ?
+                  <Nav.Link href="#" className={activeLink === 'home' ? 'active navbar-link' : 'navbar-link'} onClick={() => handleLogout()}>Logout</Nav.Link>
+                  :
+                  <>
+                    <Nav.Link href="#home" className={activeLink === 'home' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('home')}>Robot DCA </Nav.Link>
+                    <Nav.Link href="#skills" className={activeLink === 'skills' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('skills')}>Tarehimarika</Nav.Link>
+                  </>
+              }
             </Nav>
             <span className="navbar-text">
               <div className="social-icon">

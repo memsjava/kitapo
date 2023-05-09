@@ -9,12 +9,19 @@ import projImg6 from "../assets/img/12345.jpg";
 import colorSharp2 from "../assets/img/color-sharp2.png";
 import 'animate.css';
 import TrackVisibility from 'react-on-screen';
+import LoginForm from "./LoginForm";
+import SignupForm from "./SignupForm";
+import { useState } from "react";
+import Settings from "./Settings";
+import { Stat } from "./Stat";
 
 export const Projects = () => {
+  const [email, setEmail] = useState(localStorage.getItem('email') || '');
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') || false);
 
   const projects = [
     {
-      
+
       description: "Design & Development",
       imgUrl: projImg1,
     },
@@ -47,45 +54,60 @@ export const Projects = () => {
           <Col size={12}>
             <TrackVisibility>
               {({ isVisible }) =>
-              <div className={isVisible ? "animate__animated animate__fadeIn": ""}>
-                <h2>Projects</h2>
-                <p>I show you to all the big and small websites I have done so far</p>
-                <Tab.Container id="projects-tabs" defaultActiveKey="first">
-                  <Nav variant="pills" className="nav-pills mb-5 justify-content-center align-items-center" id="pills-tab">
-                    <Nav.Item>
-                      <Nav.Link eventKey="first">Tab 1</Nav.Link>
-                    </Nav.Item>
-                    {/* <Nav.Item>
-                      <Nav.Link eventKey="second">Tab 2</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey="third">Tab 3</Nav.Link>
-                    </Nav.Item> */}
-                  </Nav>
-                  <Tab.Content id="slideInUp" className={isVisible ? "animate__animated animate__slideInUp" : ""}>
-                    <Tab.Pane eventKey="first">
-                      <Row>
-                        {
-                          projects.map((project, index) => {
-                            return (
-                              <ProjectCard
-                                key={index}
-                                {...project}
-                                />
-                            )
-                          })
-                        }
-                      </Row>
-                    </Tab.Pane>
-                    <Tab.Pane eventKey="section">
-                      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque quam, quod neque provident velit, rem explicabo excepturi id illo molestiae blanditiis, eligendi dicta officiis asperiores delectus quasi inventore debitis quo.</p>
-                    </Tab.Pane>
-                    <Tab.Pane eventKey="third">
-                      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque quam, quod neque provident velit, rem explicabo excepturi id illo molestiae blanditiis, eligendi dicta officiis asperiores delectus quasi inventore debitis quo.</p>
-                    </Tab.Pane>
-                  </Tab.Content>
-                </Tab.Container>
-              </div>}
+                <div className={isVisible ? "animate__animated animate__fadeIn" : ""}>
+                  <h2>Kaonty perso</h2>
+                  <p>Hahafahana manaraka ny momba ny kaontinao</p>
+                  {
+                    !isLoggedIn ?
+                      <LoginForm />
+                      // <Tab.Container id="projects-tabs" defaultActiveKey="first">
+                      //   <Nav variant="pills" className="nav-pills mb-5 justify-content-center align-items-center" id="pills-tab">
+                      //     <Nav.Item>
+                      //       <Nav.Link eventKey="login">Login</Nav.Link>
+                      //     </Nav.Item>
+                      //     <Nav.Item>
+                      //       <Nav.Link eventKey="register">Register</Nav.Link>
+                      //     </Nav.Item>
+                      //   </Nav>
+                      //   <Tab.Content id="slideInUp" className={isVisible ? "animate__animated animate__slideInUp" : ""}>
+                      //     <Tab.Pane eventKey="login">
+                      //       <Row>
+                      //         <LoginForm />
+                      //       </Row>
+                      //     </Tab.Pane>
+                      //     <Tab.Pane eventKey="register">
+                      //       <SignupForm />
+                      //     </Tab.Pane>
+                      //   </Tab.Content>
+                      // </Tab.Container>
+                      :
+
+                      <Tab.Container id="projects-tabs" defaultActiveKey="first">
+                        <Nav variant="pills" className="nav-pills mb-5 justify-content-center align-items-center" id="pills-tab">
+                          <Nav.Item>
+                            <Nav.Link eventKey="first">Statistiques</Nav.Link>
+                          </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="second">Configuration robot</Nav.Link>
+                          </Nav.Item>
+                          <Nav.Item>
+                            <Nav.Link eventKey="third">Logs retrait / depot / trade</Nav.Link>
+                          </Nav.Item>
+                        </Nav>
+                        <Tab.Content id="slideInUp" className={isVisible ? "animate__animated animate__slideInUp" : ""}>
+                          <Tab.Pane eventKey="first">
+                            <Stat email={email} />
+                          </Tab.Pane>
+                          <Tab.Pane eventKey="second">
+                            <Settings />
+                          </Tab.Pane>
+                          <Tab.Pane eventKey="third">
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque quam, quod neque provident velit, rem explicabo excepturi id illo molestiae blanditiis, eligendi dicta officiis asperiores delectus quasi inventore debitis quo.</p>
+                          </Tab.Pane>
+                        </Tab.Content>
+                      </Tab.Container>
+                  }
+                </div>}
             </TrackVisibility>
           </Col>
         </Row>

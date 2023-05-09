@@ -159,8 +159,7 @@ export const Skills = () => {
                       <text y="50%" transform="translate(0, 2)">
                         <tspan x="50%" textAnchor="middle" className="donut-percent">
                           {
-
-                           data['total_sell'] + data['total_sell']
+                           data['total_buy'] + data['total_sell']
                           }
                         </tspan>
                       </text>
