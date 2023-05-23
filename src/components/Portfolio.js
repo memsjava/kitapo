@@ -5,7 +5,7 @@ import colorSharp from "../assets/img/color-sharp.png"
 import { useState, useEffect } from 'react';
 
 
-export const Skills = () => {
+export const Portfolio = () => {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -28,8 +28,8 @@ export const Skills = () => {
   const [cours, setCours] = useState({});
   const [data, setData] = useState({})
 
-  const getData = async() =>{
-    
+  const getData = async () => {
+
     await fetch("https://trano-vacance.mg/kitapo/data?email=memsjava@gmail.com")
       .then(response => response.json())
       .then(data => {
@@ -37,7 +37,7 @@ export const Skills = () => {
       })
   }
 
-  const getPrices = async() =>{
+  const getPrices = async () => {
     let res, res1
     await fetch('https://api.binance.com/api/v1/ticker/price?symbol=BTCUSDT')
       .then(response => response.json())
@@ -62,18 +62,18 @@ export const Skills = () => {
   useEffect(() => {
     getPrices()
     getData()
-  },[]);
+  }, []);
 
 
   return (
 
-    <section className="skill" id="skills">
+    <section className="skill" id="portfolio">
       <div className="container">
         <div className="row">
           <div className="col-12">
             <div className="skill-bx wow zoomIn">
-              <h2>Antontan'isa</h2>
-              <p>Ny taremarika ho hitantsika manaraka eto dia nalaina tao amin'ny compte mpiaramiombona antoka.<br></br></p>
+              <h2>Portfolio kitapo</h2>
+              <p>Les chiffres suivants sont tirés des comptes de nos partenaires.<br></br></p>
               <Carousel responsive={responsive} infinite={true} className="owl-carousel owl-theme skill-slider">
                 <div className="item">
                   {/* <img src={meter1} alt="boby napedina"/> */}
@@ -93,7 +93,7 @@ export const Skills = () => {
                       </text>
                     </g>
                   </svg>
-                  <h5>Vola nampiasaina</h5>
+                  <h5>Montant investi</h5>
                 </div>
 
                 <div className="item">
@@ -120,7 +120,7 @@ export const Skills = () => {
                       </text>
                     </g>
                   </svg>
-                  <h5>Sandany anio</h5>
+                  <h5>Valeur actuel</h5>
                 </div>
                 <div className="item">
                   {/* <img src={meter2} /> */}
@@ -149,7 +149,7 @@ export const Skills = () => {
                   <h5>ROI </h5>
                 </div>
                 <div className="item" alt="ordre nalefan robot">
-                <svg width="200" height="200">
+                  <svg width="200" height="200">
                     <circle cx="100" cy="100" r="60" strokeWidth="20" strokeDasharray="330" stroke="url(#gradient)" fill="transparent" />
                     <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0" stop-color="#800080" />
@@ -159,7 +159,7 @@ export const Skills = () => {
                       <text y="50%" transform="translate(0, 2)">
                         <tspan x="50%" textAnchor="middle" className="donut-percent">
                           {
-                           data['total_buy'] + data['total_sell']
+                            data['total_buy'] + data['total_sell']
                           }
                         </tspan>
                       </text>

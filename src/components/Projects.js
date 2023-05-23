@@ -55,8 +55,8 @@ export const Projects = () => {
             <TrackVisibility>
               {({ isVisible }) =>
                 <div className={isVisible ? "animate__animated animate__fadeIn" : ""}>
-                  <h2>Kaonty perso</h2>
-                  <p>Hahafahana manaraka ny momba ny kaontinao</p>
+                  <h2>Compte utilisateur</h2>
+                  <p>Suivue et setting de votre portfolio kitapo</p>
                   {
                     !isLoggedIn ?
                       <LoginForm />

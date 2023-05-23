@@ -13,7 +13,7 @@ const Settings = () => {
     const handleSubmitApi = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://192.168.43.28:5000/kitapo/update/api', {
+            const response = await axios.post('https://trano-vacance.mg/kitapo/update/api', {
                 apiKeyPublic,
                 apiKeyPrivate,
                 email
@@ -28,7 +28,7 @@ const Settings = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://192.168.43.28:5000/kitapo/update/config', {
+            const response = await axios.post('https://trano-vacance.mg/kitapo/update/config', {
                 canSell,
                 preferredSymbol,
                 minQuantity,

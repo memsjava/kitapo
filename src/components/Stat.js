@@ -70,7 +70,7 @@ export const Stat = (props) => {
         <div className="row">
             <div className="col-12">
                 <div className="wow zoomIn">
-                    <p>Ny taremarika avy ao amin'ny kaontinao ity.<br></br></p>
+                    <p>Portfolio de votre compte kitapo<br></br></p>
                     <Carousel responsive={responsive} infinite={true} className="owl-carousel owl-theme skill-slider">
                         <div className="item">
                             {/* <img src={meter1} alt="boby napedina"/> */}
@@ -90,7 +90,7 @@ export const Stat = (props) => {
                                     </text>
                                 </g>
                             </svg>
-                            <h5>Vola nampiasaina</h5>
+                            <h5>Montant investi</h5>
                         </div>
 
                         <div className="item">
@@ -117,7 +117,7 @@ export const Stat = (props) => {
                                     </text>
                                 </g>
                             </svg>
-                            <h5>Sandany anio</h5>
+                            <h5>Valeur actuel du compte</h5>
                         </div>
                         <div className="item">
                             {/* <img src={meter2} /> */}

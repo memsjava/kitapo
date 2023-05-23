@@ -9,11 +9,11 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://192.168.43.28:5000/kitapo/login', {
+      const response = await axios.post('https://trano-vacance.mg/kitapo/login', {
         email,
         password,
       });
-      console.log(response.data.data)
+      // console.log(response.data.data)
 
       localStorage.setItem('isLoggedIn', true);
       localStorage.setItem('email', email);
@@ -21,7 +21,7 @@ const LoginForm = () => {
       localStorage.setItem('can_sell', response.data.data['can_sell']);
       localStorage.setItem('qtty', response.data.data['qtty']);
       localStorage.setItem('symbol', response.data.data['symbol']);
-      // window.location.reload()
+      window.location.reload()
     } catch (error) {
       console.error(error);
     }
