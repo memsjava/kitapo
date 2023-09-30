@@ -68,7 +68,7 @@ export const Portfolio = () => {
   return (
 
     <section className="skill" id="portfolio">
-      <div className="container">
+      <div className="container" style={{ paddingTop: '8rem' }}>
         <div className="row">
           <div className="col-12">
             <div className="skill-bx wow zoomIn">
@@ -181,7 +181,9 @@ export const Portfolio = () => {
 
                       fill="url(#gradient)" />
                     <text x="150" y="50" textAnchor="middle" dominantBaseline="central" fontSize="0.7em" fill="#00FFFF">{data['ETH']} ETH</text>
-                    <circle cx="100" cy="150" r={data['USDT'] * cours['USDT'] * 50 / (data['BTC'] * cours['BTC'] * cours['USDT'] + data['ETH'] * cours['ETH'] * cours['USDT'] + data['USDT'] * cours['USDT'])}
+
+                    <circle cx="100" cy="150"
+                      r={data['USDT'] * cours['USDT'] * 50 / (data['BTC'] * cours['BTC'] * cours['USDT'] + data['ETH'] * cours['ETH'] * cours['USDT'] + data['USDT'] * cours['USDT'])}
 
                       fill="#00F" />
                     <text x="100" y="150" textAnchor="middle" dominantBaseline="central" fontSize="0.7em" fill="#00FFFF">{data['USDT']} USDT</text>

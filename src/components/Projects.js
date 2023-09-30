@@ -49,8 +49,8 @@ export const Projects = () => {
 
   return (
     <section className="project" id="project">
-      <Container>
-        <Row>
+      <Container >
+        <Row style={{ paddingTop: '8rem' }}>
           <Col size={12}>
             <TrackVisibility>
               {({ isVisible }) =>
