@@ -56,7 +56,7 @@ export const Projects = () => {
               {({ isVisible }) =>
                 <div className={isVisible ? "animate__animated animate__fadeIn" : ""}>
                   <h2>Compte utilisateur</h2>
-                  <p>Suivue et setting de votre portfolio kitapo</p>
+                  <p>Suivie et parametrage de votre portfolio kitapo</p>
                   {
                     !isLoggedIn ?
                       <LoginForm />
