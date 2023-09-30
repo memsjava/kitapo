@@ -54,7 +54,7 @@ export const Portfolio = () => {
 
     setCours({
       ETH: res1,
-      USDT: 4300,
+      USDT: 4600,
       BTC: res,
     })
   }
