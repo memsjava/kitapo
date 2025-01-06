@@ -4,16 +4,16 @@ import { PersonCircle, Bell, Shield, Wallet } from 'react-bootstrap-icons';
 
 export const Settings = () => {
   return (
-    <section className="settings">
+    <div className="settings-page">
       <Container>
-        <Row className="align-items-center">
-          <Col xs={12} className="mt-4">
-            <h1>Settings</h1>
+        <Row className="mb-4">
+          <Col>
+            <h1 className="page-title">Settings</h1>
             <p className="text-muted">Manage your account preferences</p>
           </Col>
         </Row>
 
-        <Row className="mt-4">
+        <Row>
           <Col lg={4} className="mb-4">
             <Card className="settings-nav">
               <Card.Body>
@@ -82,6 +82,6 @@ export const Settings = () => {
           </Col>
         </Row>
       </Container>
-    </section>
+    </div>
   );
 };

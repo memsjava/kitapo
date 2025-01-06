@@ -473,9 +473,10 @@ nav.navbar .navbar-nav .nav-link.navbar-link.active {
 
 /************ Footer Css ************/
 .footer {
-  padding: 60px 0 30px 0;
+  padding: 40px 0;
   background: var(--card-bg);
   border-top: 1px solid rgba(0, 0, 0, 0.05);
+  margin-top: auto;
 }
 
 .footer-content {
@@ -994,14 +995,161 @@ nav.navbar .navbar-nav .nav-link.navbar-link.active {
 }
 
 /* Content Spacing */
-.App > div:not(.navbar) {
-  padding-top: 100px;
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard,
+.market-page,
+.transactions-page,
+.settings-page {
+  flex: 1;
+  padding-top: 100px; /* Space for fixed navbar */
+  padding-bottom: 80px; /* Space before footer */
 }
 
 .home {
-  padding-top: 0 !important;
+  flex: 1;
+  padding-bottom: 80px;
 }
 
-.dashboard, .market-page, .transactions-page, .settings-page {
-  padding-top: 100px;
+/* Page Title Styles */
+.page-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--dark-text);
+  padding-top: 20px;
+}
+
+/* Footer Styles */
+.footer {
+  background: var(--card-bg);
+  padding: 40px 0;
+  margin-top: auto;
+}
+
+.footer-section {
+  margin-bottom: 2rem;
+}
+
+.footer-section:last-child {
+  margin-bottom: 0;
+}
+
+.footer h5 {
+  color: var(--dark-text);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 1rem;
+}
+
+.footer-links li:last-child {
+  margin-bottom: 0;
+}
+
+.footer-links a {
+  color: var(--gray-text);
+  text-decoration: none;
+  transition: color var(--transition-speed);
+}
+
+.footer-links a:hover {
+  color: var(--primary-color);
+}
+
+/* Table Styles */
+.market-table,
+.transaction-table {
+  margin-bottom: 0;
+}
+
+.market-table th,
+.transaction-table th {
+  border-bottom: 2px solid var(--card-bg);
+  color: var(--gray-text);
+  font-weight: 500;
+  padding: 1rem;
+}
+
+.market-table td,
+.transaction-table td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--card-bg);
+}
+
+.coin-name {
+  font-weight: 500;
+}
+
+.coin-symbol {
+  font-size: 0.875rem;
+}
+
+.transaction-type {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.transaction-type.buy {
+  color: var(--success-color);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.transaction-type.sell {
+  color: var(--danger-color);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.status {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status.completed {
+  color: var(--success-color);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+/* Settings Styles */
+.settings-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: var(--card-border-radius);
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.settings-nav-item:hover {
+  background: var(--card-bg);
+}
+
+.settings-nav-item.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.settings-content {
+  height: 100%;
 }

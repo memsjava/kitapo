@@ -12,16 +12,16 @@ export const Market = () => {
   ];
 
   return (
-    <section className="market">
+    <div className="market-page">
       <Container>
-        <Row className="align-items-center">
-          <Col xs={12} className="mt-4">
-            <h1>Market</h1>
+        <Row className="mb-4">
+          <Col>
+            <h1 className="page-title">Market</h1>
             <p className="text-muted">Live cryptocurrency prices and market data</p>
           </Col>
         </Row>
 
-        <Row className="mt-4">
+        <Row>
           <Col>
             <Card className="market-card">
               <Card.Body>
@@ -60,6 +60,6 @@ export const Market = () => {
           </Col>
         </Row>
       </Container>
-    </section>
+    </div>
   );
 };

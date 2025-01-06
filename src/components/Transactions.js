@@ -12,16 +12,16 @@ export const Transactions = () => {
   ];
 
   return (
-    <section className="transactions">
+    <div className="transactions-page">
       <Container>
-        <Row className="align-items-center">
-          <Col xs={12} className="mt-4">
-            <h1>Transactions</h1>
+        <Row className="mb-4">
+          <Col>
+            <h1 className="page-title">Transactions</h1>
             <p className="text-muted">Your transaction history</p>
           </Col>
         </Row>
 
-        <Row className="mt-4">
+        <Row>
           <Col>
             <Card className="transaction-card">
               <Card.Body>
@@ -65,6 +65,6 @@ export const Transactions = () => {
           </Col>
         </Row>
       </Container>
-    </section>
+    </div>
   );
 };
