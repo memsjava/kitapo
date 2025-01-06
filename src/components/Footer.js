@@ -1,29 +1,69 @@
-import { Container, Row, Col } from "react-bootstrap";
-// import { MailchimpForm } from "./MailchimpForm";
-import logo from "../assets/img/odina2.png";
-import navIcon1 from "../assets/img/nav-icon1.svg";
-import navIcon2 from "../assets/img/nav-icon2.svg";
-// import navIcon3 from "../assets/img/nav-icon3.svg";
+import React from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Facebook, Twitter, Linkedin, Github } from 'react-bootstrap-icons';
 
 export const Footer = () => {
   return (
-    <footer className="" style={{ paddingTop: "24px" }}>
+    <footer className="footer">
       <Container>
-        <Row className="align-items-center">
-          {/* <MailchimpForm /> */}
-          <Col size={12} sm={6}>
-            {/* <img src={logo} alt="Logo" /> */}
-          </Col>
-          <Col size={12} sm={6} className="text-center text-sm-end">
-            <div className="social-icon">
-              <a href="https://www.linkedin.com/in/rabemampiandra-eric-noel"><img src={navIcon1} alt="Icon" /></a>
-              <a href="https://web.facebook.com/profile.php?id=100089190066961"><img src={navIcon2} alt="Icon" /></a>
-              {/* <a href="#"><img src={navIcon3} alt="Icon" /></a> */}
+        <div className="footer-content">
+          <div className="footer-section">
+            <h5>KitaPo</h5>
+            <p className="text-muted">
+              Track your crypto portfolio with real-time data and advanced analytics.
+            </p>
+            <div className="social-links">
+              <a href="https://twitter.com/kitapo" target="_blank" rel="noopener noreferrer">
+                <Twitter size={20} />
+              </a>
+              <a href="https://linkedin.com/company/kitapo" target="_blank" rel="noopener noreferrer">
+                <Linkedin size={20} />
+              </a>
+              <a href="https://github.com/kitapo" target="_blank" rel="noopener noreferrer">
+                <Github size={20} />
+              </a>
+              <a href="https://facebook.com/kitapo" target="_blank" rel="noopener noreferrer">
+                <Facebook size={20} />
+              </a>
             </div>
-            <p>Contact me on social media</p>
-          </Col>
-        </Row>
+          </div>
+
+          <div className="footer-section">
+            <h5>Quick Links</h5>
+            <ul className="footer-links">
+              <li><Link to="/portfolio">Portfolio</Link></li>
+              <li><Link to="/market">Market</Link></li>
+              <li><Link to="/transactions">Transactions</Link></li>
+              <li><Link to="/settings">Settings</Link></li>
+            </ul>
+          </div>
+
+          <div className="footer-section">
+            <h5>Resources</h5>
+            <ul className="footer-links">
+              <li><a href="/help">Help Center</a></li>
+              <li><a href="/blog">Blog</a></li>
+              <li><a href="/api">API Documentation</a></li>
+              <li><a href="/status">System Status</a></li>
+            </ul>
+          </div>
+
+          <div className="footer-section">
+            <h5>Legal</h5>
+            <ul className="footer-links">
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Service</a></li>
+              <li><a href="/security">Security</a></li>
+              <li><a href="/compliance">Compliance</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <p>&copy; {new Date().getFullYear()} KitaPo. All rights reserved.</p>
+        </div>
       </Container>
     </footer>
-  )
-}
+  );
+};

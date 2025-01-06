@@ -1,30 +1,31 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { NavBar } from "./components/NavBar";
-import { Banner } from "./components/Banner";
-import { Portfolio } from "./components/Portfolio";
-import { Projects } from "./components/Projects";
-import { Contact } from "./components/Contact";
-import { Footer } from "./components/Footer";
-import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { NavBar } from './components/NavBar';
+import { Footer } from './components/Footer';
+import { Dashboard } from './components/Dashboard';
+import { Market } from './components/Market';
+import { Transactions } from './components/Transactions';
+import { Settings } from './components/Settings';
+import { Home } from './components/Home';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') || false);
-
   return (
-    <div className="App">
-      <NavBar />
-      <Banner />
-      {
-        !isLoggedIn &&
-        <Portfolio />
-      }
-
-      <Projects />
-      {/* <Contact /> */}
-      <Footer />
-    </div>
+    <Router>
+      <div className="App">
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/portfolio" element={<Dashboard />} />
+          <Route path="/market" element={<Market />} />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/dashboard" element={<Navigate to="/portfolio" replace />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
