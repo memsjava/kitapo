@@ -1,15 +1,89 @@
-import React from 'react';
-import { Container, Row, Col, Card, Table } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Table, Spinner } from 'react-bootstrap';
 import { ArrowUpCircle, ArrowDownCircle } from 'react-bootstrap-icons';
+import { initWebSocket, getInitialMarketData } from '../services/cryptoService';
 
 export const Market = () => {
-  const marketData = [
-    { name: 'Bitcoin', symbol: 'BTC', price: '$45,234.12', change: '+2.5%', volume: '$24.5B', isPositive: true },
-    { name: 'Ethereum', symbol: 'ETH', price: '$3,234.45', change: '-1.2%', volume: '$15.2B', isPositive: false },
-    { name: 'Cardano', symbol: 'ADA', price: '$1.45', change: '+3.8%', volume: '$4.2B', isPositive: true },
-    { name: 'Solana', symbol: 'SOL', price: '$234.12', change: '+5.2%', volume: '$3.8B', isPositive: true },
-    { name: 'Polkadot', symbol: 'DOT', price: '$28.45', change: '-0.8%', volume: '$2.1B', isPositive: false },
-  ];
+  const [marketData, setMarketData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [priceUpdates, setPriceUpdates] = useState({});
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const data = await getInitialMarketData();
+        setMarketData(data);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch market data. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
+  useEffect(() => {
+    const cleanup = initWebSocket((updates) => {
+      setPriceUpdates((prev) => ({ ...prev, ...updates }));
+    });
+
+    return cleanup;
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(priceUpdates).length > 0) {
+      setMarketData((prevData) =>
+        prevData.map((coin) => {
+          const newPrice = priceUpdates[coin.id];
+          if (newPrice) {
+            const priceChange = ((newPrice - coin.priceUsd) / coin.priceUsd) * 100;
+            return {
+              ...coin,
+              priceUsd: newPrice,
+              changePercent24Hr: priceChange.toString()
+            };
+          }
+          return coin;
+        })
+      );
+    }
+  }, [priceUpdates]);
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(price);
+  };
+
+  const formatVolume = (volume) => {
+    if (volume >= 1e9) {
+      return `$${(volume / 1e9).toFixed(1)}B`;
+    } else if (volume >= 1e6) {
+      return `$${(volume / 1e6).toFixed(1)}M`;
+    }
+    return `$${volume.toFixed(0)}`;
+  };
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '60vh' }}>
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center mt-5">
+        <p className="text-danger">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="market-page">
@@ -31,26 +105,33 @@ export const Market = () => {
                       <th>Name</th>
                       <th>Price</th>
                       <th>24h Change</th>
-                      <th>Volume</th>
+                      <th>Volume (24h)</th>
+                      <th>Market Cap</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {marketData.map((coin, index) => (
-                      <tr key={index}>
+                    {marketData.map((coin) => (
+                      <tr key={coin.id}>
                         <td>
                           <div className="d-flex align-items-center">
                             <span className="coin-name">{coin.name}</span>
                             <span className="coin-symbol text-muted ms-2">{coin.symbol}</span>
                           </div>
                         </td>
-                        <td>{coin.price}</td>
+                        <td className={priceUpdates[coin.id] ? 'price-flash' : ''}>
+                          {formatPrice(coin.priceUsd)}
+                        </td>
                         <td>
-                          <span className={`change ${coin.isPositive ? 'positive' : 'negative'}`}>
-                            {coin.isPositive ? <ArrowUpCircle className="me-1" /> : <ArrowDownCircle className="me-1" />}
-                            {coin.change}
+                          <span className={`change ${parseFloat(coin.changePercent24Hr) >= 0 ? 'positive' : 'negative'}`}>
+                            {parseFloat(coin.changePercent24Hr) >= 0 ? 
+                              <ArrowUpCircle className="me-1" /> : 
+                              <ArrowDownCircle className="me-1" />
+                            }
+                            {Math.abs(parseFloat(coin.changePercent24Hr)).toFixed(2)}%
                           </span>
                         </td>
-                        <td>{coin.volume}</td>
+                        <td>{formatVolume(parseFloat(coin.volumeUsd24Hr))}</td>
+                        <td>{formatVolume(parseFloat(coin.marketCapUsd))}</td>
                       </tr>
                     ))}
                   </tbody>
