@@ -6,12 +6,12 @@ export const Settings = () => {
   return (
     <div className="settings-page">
       <Container>
-        <Row className="mb-4">
+        {/* <Row className="mb-4">
           <Col>
             <h1 className="page-title">Settings</h1>
             <p className="text-muted">Manage your account preferences</p>
           </Col>
-        </Row>
+        </Row> */}
 
         <Row>
           <Col lg={4} className="mb-4">

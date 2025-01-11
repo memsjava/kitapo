@@ -88,12 +88,12 @@ export const Market = () => {
   return (
     <div className="market-page">
       <Container>
-        <Row className="mb-4">
+        {/* <Row className="mb-4">
           <Col>
-            <h1 className="page-title">Market</h1>
+            <h1 className="page-title">Market</h1> 
             <p className="text-muted">Live cryptocurrency prices and market data</p>
           </Col>
-        </Row>
+        </Row> */}
 
         <Row>
           <Col>

@@ -14,12 +14,12 @@ export const Transactions = () => {
   return (
     <div className="transactions-page">
       <Container>
-        <Row className="mb-4">
+        {/* <Row className="mb-4">
           <Col>
             <h1 className="page-title">Transactions</h1>
             <p className="text-muted">Your transaction history</p>
           </Col>
-        </Row>
+        </Row> */}
 
         <Row>
           <Col>
@@ -62,6 +62,12 @@ export const Transactions = () => {
                 </Table>
               </Card.Body>
             </Card>
+          </Col>
+        </Row>
+          <Row className="mb-4">
+          <Col>
+            <h1 className="page-title"></h1>
+            <p className="text-muted">Your transaction history</p>
           </Col>
         </Row>
       </Container>

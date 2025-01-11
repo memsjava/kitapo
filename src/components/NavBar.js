@@ -1,25 +1,14 @@
 import { useState, useEffect } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
-import { Wallet2, BarChart, Clock, Gear } from 'react-bootstrap-icons';
+import { QuestionCircle, Person, List } from 'react-bootstrap-icons';
+import logo from '../assets/img/logo.png';
+import './NavBar.css';
 
 export const NavBar = () => {
   const [activeLink, setActiveLink] = useState('portfolio');
-  const [scrolled, setScrolled] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const location = useLocation();
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    }
-
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     const path = location.pathname.replace('/', '');
@@ -27,45 +16,67 @@ export const NavBar = () => {
   }, [location]);
 
   return (
-    <Navbar expand="lg" className={scrolled ? "scrolled" : ""}>
-      <Container>
-        <Navbar.Brand as={Link} to="/">
-          <span className="logo">KitaPo</span>
+    <Navbar className="custom-navbar" expand="lg" expanded={expanded}>
+      <Container fluid className="px-4">
+        <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
+          <img src={logo} alt="KitaPo" className="navbar-logo" />
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav">
-          <span className="navbar-toggler-icon"></span>
+
+        <Navbar.Toggle 
+          aria-controls="basic-navbar-nav" 
+          onClick={() => setExpanded(!expanded)}
+          className="custom-toggler"
+        >
+          <List size={24} />
         </Navbar.Toggle>
+
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto">
+          <Nav className="main-nav me-auto">
             <Nav.Link
               as={Link}
               to="/portfolio"
               className={activeLink === 'portfolio' ? 'active' : ''}
+              onClick={() => setExpanded(false)}
             >
-              <Wallet2 className="nav-icon" /> Portfolio
-            </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="/market"
-              className={activeLink === 'market' ? 'active' : ''}
-            >
-              <BarChart className="nav-icon" /> Market
+              Portfolio
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/transactions"
               className={activeLink === 'transactions' ? 'active' : ''}
+              onClick={() => setExpanded(false)}
             >
-              <Clock className="nav-icon" /> Transactions
+              Transactions
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/market"
+              className={activeLink === 'market' ? 'active' : ''}
+              onClick={() => setExpanded(false)}
+            >
+              Market
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/settings"
               className={activeLink === 'settings' ? 'active' : ''}
+              onClick={() => setExpanded(false)}
             >
-              <Gear className="nav-icon" /> Settings
+              Settings
             </Nav.Link>
           </Nav>
+          
+          <div className="nav-right">
+            <Nav.Link href="#" className="icon-link">
+              <QuestionCircle size={20} />
+            </Nav.Link>
+            <Nav.Link href="#" className="icon-link ms-3">
+              <Person size={20} />
+            </Nav.Link>
+            <div className="user-profile ms-3">
+              EN
+            </div>
+          </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>

@@ -530,8 +530,10 @@ nav.navbar .navbar-nav .nav-link.navbar-link.active {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--light-bg);
-  color: var(--primary-color);
+  /* background: var(--light-bg);
+  color: var(--primary-color); */
+  background-color: rgb(0, 0, 0); /* Black background */
+  color: #debbee; /* Text color */
   transition: all var(--transition-speed);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }

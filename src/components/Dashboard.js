@@ -10,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import './Dashboard.css';
 
 export const Dashboard = () => {
   const [portfolioStats, setPortfolioStats] = useState([]);
@@ -119,12 +120,12 @@ export const Dashboard = () => {
   return (
     <div className="dashboard">
       <Container>
-        <Row className="mb-4">
+        {/* <Row className="mb-4">
           <Col>
             <h1 className="page-title">Portfolio</h1>
             <p className="text-muted">Track and manage your crypto assets</p>
           </Col>
-        </Row>
+        </Row> */}
 
         <Row className="mb-4">
           {portfolioStats.map((stat, index) => (
@@ -169,7 +170,7 @@ export const Dashboard = () => {
                       dataKey="value"
                       stroke="var(--primary-color)"
                       fillOpacity={1}
-                      fill="url(#colorValue)"
+                      fill="transparent"
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -182,7 +183,7 @@ export const Dashboard = () => {
           <Col md={12}>
             <Card className="asset-card">
               <Card.Body>
-                <h5 className="mb-4">Top Assets</h5>
+                <h5 className="mb-4">All assets</h5>
                 {topAssets.map((asset, index) => (
                   <div key={index} className="asset-item d-flex justify-content-between align-items-center">
                     <div>
@@ -210,4 +211,3 @@ export const Dashboard = () => {
     </div>
   );
 };
-
