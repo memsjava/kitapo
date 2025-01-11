@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import { ArrowUpCircleFill, ArrowDownCircleFill } from 'react-bootstrap-icons';
 import {
@@ -11,44 +11,110 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const data = [
-  { name: 'Jan', value: 4000 },
-  { name: 'Feb', value: 3000 },
-  { name: 'Mar', value: 5000 },
-  { name: 'Apr', value: 2780 },
-  { name: 'May', value: 1890 },
-  { name: 'Jun', value: 2390 },
-  { name: 'Jul', value: 3490 },
-];
-
 export const Dashboard = () => {
-  // Sample portfolio data
-  const portfolioStats = [
-    {
-      title: 'Total Value',
-      value: '$15,234.23',
-      change: '+2.5%',
-      isPositive: true,
-    },
-    {
-      title: '24h Change',
-      value: '$323.56',
-      change: '+2.1%',
-      isPositive: true,
-    },
-    {
-      title: 'Total Assets',
-      value: '12',
-      change: '-1',
-      isPositive: false,
-    },
-  ];
+  const [portfolioStats, setPortfolioStats] = useState([]);
+  const [topAssets, setTopAssets] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [dataFetched, setDataFetched] = useState(false);
 
-  const topAssets = [
-    { name: 'Bitcoin', symbol: 'BTC', value: '$8,234.12', change: '+3.2%', isPositive: true },
-    { name: 'Ethereum', symbol: 'ETH', value: '$2,123.45', change: '-1.4%', isPositive: false },
-    { name: 'Cardano', symbol: 'ADA', value: '$1,045.78', change: '+2.8%', isPositive: true },
-  ];
+  useEffect(() => {
+    if (!dataFetched) {
+      const fetchData = async () => {
+        try {
+          // Fetch portfolio data
+          const portfolioResponse = await fetch('http://localhost:5000/kitapo/portfolio?email=memsjava@gmail.com');
+          const portfolioData = await portfolioResponse.json();
+
+          // Fetch current data
+          const currentDataResponse = await fetch('http://localhost:5000/kitapo/data?email=memsjava@gmail.com');
+          const currentData = await currentDataResponse.json();
+
+          // Process portfolio data for the chart
+          const processedChartData = portfolioData.portfolio_values.map(item => ({
+            name: new Date(item.date).toLocaleDateString(),
+            value: item.total_value_usdt,
+          }));
+          setChartData(processedChartData);
+
+            // Calculate 24h change for portfolio
+            const portfolioValues = portfolioData.portfolio_values;
+            const todayValue = portfolioValues[portfolioValues.length - 1].total_value_usdt;
+            const yesterdayValue = portfolioValues[portfolioValues.length - 2].total_value_usdt;
+            const portfolioChange = ((todayValue - yesterdayValue) / yesterdayValue) * 100;
+    
+
+          // Process current data for portfolio stats
+          const totalAssets = Object.keys(currentData.current_data.assets).length;
+
+          setPortfolioStats([
+            {
+              title: 'Total Value',
+              value: `$${parseFloat(todayValue).toFixed(4)}`,
+              change: `${portfolioChange.toFixed(2)}%`, // 24h change for portfolio
+              isPositive: portfolioChange >= 0,
+            },
+            {
+              title: '24h Change',
+              value: `$${(todayValue - yesterdayValue).toFixed(2)}`, // Absolute change in USD
+              change: `${portfolioChange.toFixed(2)}%`,
+              isPositive: portfolioChange >= 0,
+            },
+            {
+              title: 'Total Assets',
+              value: totalAssets,
+              change: '0',
+              isPositive: true,
+            },
+          ]);
+
+          // Process current data for top assets
+          const assets = await Promise.all(
+            // Process current data for top assets
+            Object.entries(currentData.current_data.assets).map(async ([symbol, value]) => {
+              let currentPrice = 1; // Default price for USDT
+              let previousPrice = 1; // Default previous price for USDT
+              let changePercentage = 0; // Default change percentage for USDT
+
+              if (symbol !== 'USDT') {
+                // Fetch current price from Binance API for non-USDT assets
+                const currentPriceResponse = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${symbol}USDT`);
+                const currentPriceData = await currentPriceResponse.json();
+                currentPrice = parseFloat(currentPriceData.price);
+
+                // Fetch 24-hour price change from Binance API for non-USDT assets
+                const priceChangeResponse = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}USDT`);
+                const priceChangeData = await priceChangeResponse.json();
+                previousPrice = parseFloat(priceChangeData.prevClosePrice);
+
+                // Calculate the percentage change for non-USDT assets
+                changePercentage = value === '0' ? 0 : (((currentPrice - previousPrice) / previousPrice) * 100).toFixed(2);
+              }
+
+              // Calculate the value in USD
+              const valueInUSD = (value * currentPrice).toFixed(4);
+
+              // Determine if the change is positive or negative
+              const isPositive = changePercentage >= 0;
+
+              return {
+                name: symbol,
+                symbol,
+                value: `$${valueInUSD}`,
+                change: symbol === 'USDT' ? '0.00%' : `${isPositive ? '+' : ''}${changePercentage}%`,
+                isPositive,
+              };
+            })
+          );
+          setTopAssets(assets);
+
+          setDataFetched(true );
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      fetchData();
+    }
+  }, [dataFetched]);
 
   return (
     <div className="dashboard">
@@ -87,7 +153,7 @@ export const Dashboard = () => {
               <Card.Body>
                 <h5 className="mb-4">Portfolio Performance</h5>
                 <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={data}>
+                  <AreaChart data={chartData}>
                     <defs>
                       <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="var(--primary-color)" stopOpacity={0.3} />
@@ -144,3 +210,4 @@ export const Dashboard = () => {
     </div>
   );
 };
+
