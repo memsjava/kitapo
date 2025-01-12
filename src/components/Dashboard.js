@@ -26,11 +26,11 @@ export const Dashboard = () => {
       const fetchData = async () => {
         try {
           // Fetch portfolio data
-          const portfolioResponse = await fetch('https://167.235.227.91:5000/kitapo/portfolio?email=memsjava@gmail.com');
+          const portfolioResponse = await fetch('https://trano-vacance.mg/kitapo/portfolio?email=memsjava@gmail.com');
           const portfolioData = await portfolioResponse.json();
 
           // Fetch current data
-          const currentDataResponse = await fetch('https://167.235.227.91:5000/kitapo/data?email=memsjava@gmail.com');
+          const currentDataResponse = await fetch('https://trano-vacance.mg/kitapo/data?email=memsjava@gmail.com');
           const currentData = await currentDataResponse.json();
 
           // Process portfolio data for the chart
