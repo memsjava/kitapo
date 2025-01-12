@@ -13,21 +13,24 @@ import {
 import './Dashboard.css';
 
 export const Dashboard = () => {
+
   const [portfolioStats, setPortfolioStats] = useState([]);
   const [topAssets, setTopAssets] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
 
   useEffect(() => {
+    // Check if the user came from the home page
+ 
     if (!dataFetched) {
       const fetchData = async () => {
         try {
           // Fetch portfolio data
-          const portfolioResponse = await fetch('http://localhost:5000/kitapo/portfolio?email=memsjava@gmail.com');
+          const portfolioResponse = await fetch('https://167.235.227.91:5000/kitapo/portfolio?email=memsjava@gmail.com');
           const portfolioData = await portfolioResponse.json();
 
           // Fetch current data
-          const currentDataResponse = await fetch('http://localhost:5000/kitapo/data?email=memsjava@gmail.com');
+          const currentDataResponse = await fetch('https://167.235.227.91:5000/kitapo/data?email=memsjava@gmail.com');
           const currentData = await currentDataResponse.json();
 
           // Process portfolio data for the chart
