@@ -1,26 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Table } from 'react-bootstrap';
 import { ArrowUpCircleFill, ArrowDownCircleFill } from 'react-bootstrap-icons';
+import axios from 'axios';
 
 export const Transactions = () => {
-  const transactions = [
-    { type: 'buy', coin: 'Bitcoin', amount: '0.25 BTC', value: '$11,234.56', date: '2025-01-06', status: 'Completed' },
-    { type: 'sell', coin: 'Ethereum', amount: '2.5 ETH', value: '$8,234.12', date: '2025-01-05', status: 'Completed' },
-    { type: 'buy', coin: 'Cardano', amount: '1000 ADA', value: '$1,450.00', date: '2025-01-04', status: 'Completed' },
-    { type: 'buy', coin: 'Solana', amount: '5 SOL', value: '$1,170.60', date: '2025-01-03', status: 'Completed' },
-    { type: 'sell', coin: 'Polkadot', amount: '100 DOT', value: '$2,845.00', date: '2025-01-02', status: 'Completed' },
-  ];
+  const [transactions, setTransactions] = useState([]);
+  const email = 'memsjava@gmail.com';//localStorage.getItem('email');
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await axios.get(`https://trano-vacance.mg/kitapo/transactions?email=${email}`);
+        setTransactions(response.data.transactions || []);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+
+    if (email) {
+      fetchTransactions();
+    }
+  }, [email]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString();
+  };
+
+  const formatNumber = (number) => {
+    return Number(number).toFixed(8).replace(/\.?0+$/, '');
+  };
 
   return (
     <div className="transactions-page">
       <Container>
-        {/* <Row className="mb-4">
+        <Row className="mb-4">
           <Col>
-            <h1 className="page-title">Transactions</h1>
+            <h1 className="page-title"></h1>
             <p className="text-muted">Your transaction history</p>
           </Col>
-        </Row> */}
-
+        </Row>
         <Row>
           <Col>
             <Card className="transaction-card">
@@ -29,19 +48,20 @@ export const Transactions = () => {
                   <thead>
                     <tr>
                       <th>Type</th>
-                      <th>Coin</th>
+                      <th>Asset</th>
                       <th>Amount</th>
-                      <th>Value</th>
+                      <th>Price (USDT)</th>
+                      <th>Total (USDT)</th>
                       <th>Date</th>
-                      <th>Status</th>
+                      <th>Profit</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {transactions.map((tx, index) => (
-                      <tr key={index}>
+                    {transactions.map((tx) => (
+                      <tr key={tx.id}>
                         <td>
                           <span className={`transaction-type ${tx.type}`}>
-                            {tx.type === 'buy' ? (
+                            {tx.type === 'deposit' ? (
                               <ArrowUpCircleFill className="me-2" />
                             ) : (
                               <ArrowDownCircleFill className="me-2" />
@@ -49,25 +69,18 @@ export const Transactions = () => {
                             {tx.type.toUpperCase()}
                           </span>
                         </td>
-                        <td>{tx.coin}</td>
-                        <td>{tx.amount}</td>
-                        <td>{tx.value}</td>
-                        <td>{tx.date}</td>
-                        <td>
-                          <span className="status completed">{tx.status}</span>
-                        </td>
+                        <td>{tx.asset}</td>
+                        <td>{formatNumber(tx.amount)}</td>
+                        <td>{formatNumber(tx.price_usdt)}</td>
+                        <td>{formatNumber(tx.total_usdt)}</td>
+                        <td>{formatDate(tx.date)}</td>
+                        <td>{tx.profit ? formatNumber(tx.profit) : '-'}</td>
                       </tr>
                     ))}
                   </tbody>
                 </Table>
               </Card.Body>
             </Card>
-          </Col>
-        </Row>
-          <Row className="mb-4">
-          <Col>
-            <h1 className="page-title"></h1>
-            <p className="text-muted">Your transaction history</p>
           </Col>
         </Row>
       </Container>
