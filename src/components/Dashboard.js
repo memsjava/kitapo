@@ -66,7 +66,7 @@ export const Dashboard = () => {
                   };
                 }
 
-                const amount = Math.abs(parseFloat(tx.amount || 0));
+                const amount = Math.abs(parseFloat(tx.total_usdt || 0));
                 if (!isNaN(amount) && tx.type) {
                   transactionsByDate[formattedDate][tx.type] += amount;
                 }
@@ -214,13 +214,13 @@ export const Dashboard = () => {
                       <YAxis 
                         yAxisId="left" 
                         stroke="var(--gray-text)"
-                        label={{ value: 'Portfolio Value (USDT)', angle: -90, position: 'insideLeft', fill: 'var(--gray-text)' }} 
+                        label={{ value: 'Portfolio Value ($)', angle: -90, position: 'insideLeft', fill: 'var(--gray-text)' }} 
                       />
                       <YAxis 
                         yAxisId="right" 
                         orientation="right" 
                         stroke="var(--gray-text)"
-                        label={{ value: 'Transaction Amount (USDT)', angle: 90, position: 'insideRight', fill: 'var(--gray-text)' }}
+                        label={{ value: 'Transaction Amount ($)', angle: 90, position: 'insideRight', fill: 'var(--gray-text)' }}
                         domain={[0, 'auto']}
                       />
                       <Tooltip 
@@ -261,7 +261,7 @@ export const Dashboard = () => {
                           
                           const formattedValue = name === 'Portfolio Value' 
                             ? `$${value.toFixed(2)}`
-                            : `${value.toFixed(2)} USDT`;
+                            : `$${value.toFixed(2)}`;
                             
                           return [
                             <span style={{ color, display: 'block' }}>
@@ -292,25 +292,29 @@ export const Dashboard = () => {
                         yAxisId="right" 
                         dataKey="deposit" 
                         name="Deposit" 
-                        fill="#82ca9d" 
+                        fill="#82ca9d"
+                        barSize={10}
                       />
                       <Bar 
                         yAxisId="right" 
                         dataKey="withdraw" 
                         name="Withdraw" 
-                        fill="#ff8042" 
+                        fill="#ff8042"
+                        barSize={10}
                       />
                       <Bar 
                         yAxisId="right" 
                         dataKey="buy" 
                         name="Buy" 
-                        fill="#8884d8" 
+                        fill="#8884d8"
+                        barSize={10}
                       />
                       <Bar 
                         yAxisId="right" 
                         dataKey="sell" 
                         name="Sell" 
-                        fill="#ff7373" 
+                        fill="#ff7373"
+                        barSize={10}
                       />
                     </ComposedChart>
                   </ResponsiveContainer>
