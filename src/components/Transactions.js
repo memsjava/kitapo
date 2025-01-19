@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Table } from 'react-bootstrap';
-import { ArrowUpCircleFill, ArrowDownCircleFill } from 'react-bootstrap-icons';
+import { ArrowUpCircleFill, ArrowDownCircleFill, CartCheckFill, BagCheckFill, WalletFill } from 'react-bootstrap-icons';
 import axios from 'axios';
 
 export const Transactions = () => {
@@ -61,8 +61,14 @@ export const Transactions = () => {
                       <tr key={tx.id}>
                         <td>
                           <span className={`transaction-type ${tx.type}`}>
-                            {tx.type === 'deposit' ? (
+                          {tx.type === 'deposit' ? (
                               <ArrowUpCircleFill className="me-2" />
+                            ) : tx.type === 'sell' ? (
+                              <CartCheckFill className="me-2" />
+                            ) : tx.type === 'buy' ? (
+                              <BagCheckFill className="me-2" />
+                            ) : tx.type === 'withdraw' ? (
+                              <WalletFill className="me-2" />
                             ) : (
                               <ArrowDownCircleFill className="me-2" />
                             )}
