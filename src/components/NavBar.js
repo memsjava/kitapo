@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { QuestionCircle, Person, List } from 'react-bootstrap-icons';
+import { FormattedMessage } from 'react-intl';
 import logo from '../assets/img/logo.png';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import './NavBar.css';
 
 export const NavBar = () => {
@@ -38,7 +40,7 @@ export const NavBar = () => {
               className={activeLink === 'portfolio' ? 'active' : ''}
               onClick={() => setExpanded(false)}
             >
-              Portfolio
+              <FormattedMessage id="nav.portfolio" />
             </Nav.Link>
             <Nav.Link
               as={Link}
@@ -46,7 +48,7 @@ export const NavBar = () => {
               className={activeLink === 'transactions' ? 'active' : ''}
               onClick={() => setExpanded(false)}
             >
-              Transactions
+              <FormattedMessage id="nav.transactions" />
             </Nav.Link>
             <Nav.Link
               as={Link}
@@ -54,7 +56,7 @@ export const NavBar = () => {
               className={activeLink === 'market' ? 'active' : ''}
               onClick={() => setExpanded(false)}
             >
-              Market
+              <FormattedMessage id="nav.market" />
             </Nav.Link>
             <Nav.Link
               as={Link}
@@ -62,7 +64,7 @@ export const NavBar = () => {
               className={activeLink === 'settings' ? 'active' : ''}
               onClick={() => setExpanded(false)}
             >
-              Settings
+              <FormattedMessage id="nav.settings" />
             </Nav.Link>
           </Nav>
           
@@ -73,8 +75,8 @@ export const NavBar = () => {
             <Nav.Link href="#" className="icon-link ms-3">
               <Person size={20} />
             </Nav.Link>
-            <div className="user-profile ms-3">
-              EN
+            <div className="ms-3">
+              <LanguageSwitcher />
             </div>
           </div>
         </Navbar.Collapse>

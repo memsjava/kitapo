@@ -1,0 +1,24 @@
+{
+  "app.title": "Kitapo",
+  "nav.home": "Accueil",
+  "nav.portfolio": "Portefeuille",
+  "nav.market": "Marché",
+  "nav.transactions": "Transactions",
+  "nav.settings": "Paramètres",
+
+  "home.hero.title": "L'investissement crypto intelligent simplifié",
+  "home.hero.subtitle": "Devenez un investisseur stratégique, pas un trader. Notre bot DCA automatisé vous aide à constituer votre patrimoine de manière régulière grâce à des investissements disciplinés en cryptomonnaies.",
+  "home.hero.button": "Commencer l'investissement automatique",
+
+  "home.dca.title": "Dollar-Cost Averaging Automatisé",
+  "home.dca.subtitle": "Notre bot DCA intelligent exécute automatiquement votre stratégie d'investissement :",
+  
+  "home.dca.benefit1.title": "Configurez et oubliez",
+  "home.dca.benefit1.text": "Automatisez les achats réguliers indépendamment des conditions du marché",
+  
+  "home.dca.benefit2.title": "Investissement sans émotion",
+  "home.dca.benefit2.text": "Éliminez les barrières psychologiques et les erreurs humaines de votre stratégie",
+  
+  "home.dca.benefit3.title": "Croissance à long terme",
+  "home.dca.benefit3.text": "Bénéficiez des rendements composés sur de longues périodes"
+}

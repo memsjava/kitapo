@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { ArrowRight, BarChart, Shield, Wallet2, CurrencyBitcoin, ClockHistory, Robot } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
 export const Home = () => {
   return (
@@ -11,14 +12,15 @@ export const Home = () => {
         <Container>
           <Row className="align-items-center">
             <Col lg={6} className="text-center text-lg-start mb-5 mb-lg-0">
-              <h1 className="display-4 fw-bold mb-4">Smart Crypto Investing Made Simple</h1>
+              <h1 className="display-4 fw-bold mb-4">
+                <FormattedMessage id="home.hero.title" />
+              </h1>
               <p className="lead text-muted mb-4">
-                Become a strategic investor, not a trader. Our automated DCA bot helps you build wealth 
-                steadily through disciplined cryptocurrency investing.
+                <FormattedMessage id="home.hero.subtitle" />
               </p>
               <Link to="/dca-setup">
                 <Button variant="primary" size="lg" className="rounded-pill px-4">
-                  Start Auto-Investing <ArrowRight className="ms-2" />
+                  <FormattedMessage id="home.hero.button" /> <ArrowRight className="ms-2" />
                 </Button>
               </Link>
             </Col>
@@ -35,30 +37,44 @@ export const Home = () => {
           <Row className="align-items-center">
             <Col lg={6} className="order-lg-2 mb-5 mb-lg-0">
               <div className="section-content">
-                <h2 className="fw-bold mb-4">Automated Dollar-Cost Averaging</h2>
+                <h2 className="fw-bold mb-4">
+                  <FormattedMessage id="home.dca.title" />
+                </h2>
                 <p className="text-muted mb-4">
-                  Our intelligent DCA bot executes your investment strategy automatically:
+                  <FormattedMessage id="home.dca.subtitle" />
                 </p>
                 <div className="benefits">
                   <div className="benefit-item mb-4">
                     <ClockHistory className="benefit-icon me-3" style={{ fontSize: '1.5rem', color: '#007bff' }} />
                     <div>
-                      <h4 className="fw-bold">Set & Forget</h4>
-                      <p className="text-muted mb-0">Automate regular purchases regardless of market conditions</p>
+                      <h4 className="fw-bold">
+                        <FormattedMessage id="home.dca.benefit1.title" />
+                      </h4>
+                      <p className="text-muted mb-0">
+                        <FormattedMessage id="home.dca.benefit1.text" />
+                      </p>
                     </div>
                   </div>
                   <div className="benefit-item mb-4">
                     <Shield className="benefit-icon me-3" style={{ fontSize: '1.5rem', color: '#007bff' }} />
                     <div>
-                      <h4 className="fw-bold">Emotion-Free Investing</h4>
-                      <p className="text-muted mb-0">Remove psychological barriers and human error from your strategy</p>
+                      <h4 className="fw-bold">
+                        <FormattedMessage id="home.dca.benefit2.title" />
+                      </h4>
+                      <p className="text-muted mb-0">
+                        <FormattedMessage id="home.dca.benefit2.text" />
+                      </p>
                     </div>
                   </div>
                   <div className="benefit-item mb-4">
                     <BarChart className="benefit-icon me-3" style={{ fontSize: '1.5rem', color: '#007bff' }} />
                     <div>
-                      <h4 className="fw-bold">Long-Term Growth</h4>
-                      <p className="text-muted mb-0">Benefit from compounding returns over extended periods</p>
+                      <h4 className="fw-bold">
+                        <FormattedMessage id="home.dca.benefit3.title" />
+                      </h4>
+                      <p className="text-muted mb-0">
+                        <FormattedMessage id="home.dca.benefit3.text" />
+                      </p>
                     </div>
                   </div>
                 </div>

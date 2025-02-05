@@ -32,6 +32,8 @@ export const Dashboard = () => {
           const transactionsResponse = await fetch('https://trano-vacance.mg/kitapo/transactions?email=memsjava@gmail.com');
           const transactionsData = await transactionsResponse.json();
 
+          console.log(transactionsData);
+
           // Fetch current data
           const currentDataResponse = await fetch('https://trano-vacance.mg/kitapo/data?email=memsjava@gmail.com');
           const currentData = await currentDataResponse.json();
@@ -44,7 +46,7 @@ export const Dashboard = () => {
               try {
                 const date = tx.date || tx.datetime;
                 if (!date) return;
-                
+          
                 let txDate;
                 if (date.includes('T')) {
                   txDate = new Date(date);
@@ -52,53 +54,65 @@ export const Dashboard = () => {
                   const [year, month, day] = date.split('-');
                   txDate = new Date(year, month - 1, day);
                 }
-
+          
                 if (isNaN(txDate.getTime())) return;
-
+          
                 const formattedDate = `${txDate.getMonth() + 1}/${txDate.getDate()}/${txDate.getFullYear()}`;
-
+          
                 if (!transactionsByDate[formattedDate]) {
                   transactionsByDate[formattedDate] = {
                     deposit: 0,
-                    withdraw: 0,
+                    withdraw: 0, // Use "withdraw" as the key
                     buy: 0,
                     sell: 0
                   };
                 }
-
-                const amount = Math.abs(parseFloat(tx.total_usdt || 0));
+          
+                const amount = parseFloat(tx.total_usdt || 0);
                 if (!isNaN(amount) && tx.type) {
-                  transactionsByDate[formattedDate][tx.type] += amount;
+                  if (tx.type === "withdrawal") { // Check for "withdrawal" type
+                    // Ensure withdrawals are negative
+                    transactionsByDate[formattedDate].withdraw += Math.abs(amount);
+                  } else if (tx.type === "deposit") {
+                    transactionsByDate[formattedDate].deposit += Math.abs(amount);
+                  } else if (tx.type === "buy") {
+                    transactionsByDate[formattedDate].buy += Math.abs(amount);
+                  } else if (tx.type === "sell") {
+                    transactionsByDate[formattedDate].sell += Math.abs(amount);
+                  }
                 }
               } catch (error) {
                 console.error('Error processing transaction:', error);
               }
             });
           }
-
+          console.log("transactionsByDate",transactionsByDate)
           // Process portfolio data and combine with transactions
           const processedChartData = portfolioData.portfolio_values.map(item => {
             const itemDate = new Date(item.date);
             const date = `${itemDate.getMonth() + 1}/${itemDate.getDate()}/${itemDate.getFullYear()}`;
-            
+          
+            // Get transactions for this date
             const dayTransactions = transactionsByDate[date] || {
               deposit: 0,
               withdraw: 0,
               buy: 0,
               sell: 0
             };
-            
+          
             return {
               name: date,
               value: item.total_value_usdt,
               deposit: dayTransactions.deposit,
-              withdraw: dayTransactions.withdraw,
+              withdraw: -dayTransactions.withdraw, // Include withdraw values
               buy: dayTransactions.buy,
               sell: dayTransactions.sell
             };
           });
 
           setChartData(processedChartData);
+
+          console.log(chartData);
 
           // Calculate 24h change for portfolio
           const portfolioValues = portfolioData.portfolio_values;
@@ -201,123 +215,114 @@ export const Dashboard = () => {
               <Card.Body>
                 <h5 className="mb-4">Portfolio Performance & Transactions</h5>
                 <div style={{ height: '400px' }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={chartData}>
-                      <defs>
-                        <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="var(--primary-color)" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="var(--primary-color)" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
-                      <XAxis dataKey="name" stroke="var(--gray-text)" />
-                      <YAxis 
-                        yAxisId="left" 
-                        stroke="var(--gray-text)"
-                        label={{ value: 'Portfolio Value ($)', angle: -90, position: 'insideLeft', fill: 'var(--gray-text)' }} 
-                      />
-                      <YAxis 
-                        yAxisId="right" 
-                        orientation="right" 
-                        stroke="var(--gray-text)"
-                        label={{ value: 'Transaction Amount ($)', angle: 90, position: 'insideRight', fill: 'var(--gray-text)' }}
-                        domain={[0, 'auto']}
-                      />
-                      <Tooltip 
-                        contentStyle={{
-                          backgroundColor: 'var(--card-bg)',
-                          border: '1px solid var(--border-color)',
-                          borderRadius: '4px',
-                          padding: '10px'
-                        }}
-                        formatter={(value, name) => {
-                          let color;
-                          let label;
-                          switch (name) {
-                            case 'Portfolio Value':
-                              color = 'var(--primary-color)';
-                              label = 'Portfolio Value';
-                              break;
-                            case 'Deposit':
-                              color = '#82ca9d';
-                              label = 'Deposit Amount';
-                              break;
-                            case 'Withdraw':
-                              color = '#ff8042';
-                              label = 'Withdraw Amount';
-                              break;
-                            case 'Buy':
-                              color = '#8884d8';
-                              label = 'Buy Amount';
-                              break;
-                            case 'Sell':
-                              color = '#ff7373';
-                              label = 'Sell Amount';
-                              break;
-                            default:
-                              color = 'var(--text-color)';
-                              label = name;
-                          }
-                          
-                          const formattedValue = name === 'Portfolio Value' 
-                            ? `$${value.toFixed(2)}`
-                            : `$${value.toFixed(2)}`;
-                            
-                          return [
-                            <span style={{ color, display: 'block' }}>
-                              <span style={{ color: 'var(--text-color)', marginRight: '8px' }}>{label}:</span>
-                              {formattedValue}
-                            </span>,
-                            <span style={{ color, fontSize: '12px' }}>
-                              {name}
-                            </span>
-                          ];
-                        }}
-                        labelFormatter={(label) => (
-                          <span style={{ color: 'var(--text-color)', fontWeight: 'bold' }}>
-                            Date: {label}
-                          </span>
-                        )}
-                      />
-                      <Area
-                        yAxisId="left"
-                        type="monotone"
-                        dataKey="value"
-                        name="Portfolio Value"
-                        stroke="var(--primary-color)"
-                        fill="url(#colorValue)"
-                        fillOpacity={1}
-                      />
-                      <Bar 
-                        yAxisId="right" 
-                        dataKey="deposit" 
-                        name="Deposit" 
-                        fill="#82ca9d"
-                        barSize={10}
-                      />
-                      <Bar 
-                        yAxisId="right" 
-                        dataKey="withdraw" 
-                        name="Withdraw" 
-                        fill="#ff8042"
-                        barSize={10}
-                      />
-                      <Bar 
-                        yAxisId="right" 
-                        dataKey="buy" 
-                        name="Buy" 
-                        fill="#8884d8"
-                        barSize={10}
-                      />
-                      <Bar 
-                        yAxisId="right" 
-                        dataKey="sell" 
-                        name="Sell" 
-                        fill="#ff7373"
-                        barSize={10}
-                      />
-                    </ComposedChart>
-                  </ResponsiveContainer>
+                <ResponsiveContainer width="100%" height="100%">
+  <ComposedChart data={chartData}>
+    {
+      console.log(chartData)
+    }
+    <defs>
+      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="5%" stopColor="var(--primary-color)" stopOpacity={0.3} />
+        <stop offset="95%" stopColor="var(--primary-color)" stopOpacity={0} />
+      </linearGradient>
+    </defs>
+    <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
+    <XAxis dataKey="name" stroke="var(--gray-text)" />
+    <YAxis 
+      stroke="var(--gray-text)"
+      // label={{ value: 'Value ($)', angle: -90, position: 'insideLeft', fill: 'var(--gray-text)' }}
+      domain={['auto', 'auto']}
+    />
+    <Tooltip 
+      contentStyle={{
+        backgroundColor: 'var(--card-bg)',
+        border: '1px solid var(--border-color)',
+        borderRadius: '4px',
+        padding: '10px'
+      }}
+      formatter={(value, name) => {
+        let color;
+        let label;
+        switch (name) {
+          case 'Portfolio Value':
+            color = 'var(--primary-color)';
+            label = 'Portfolio Value';
+            break;
+          case 'Deposit':
+            color = '#82ca9d';
+            label = 'Deposit Amount';
+            break;
+          case 'Withdraw':
+            color = '#ff8042';
+            label = 'Withdraw Amount';
+            break;
+          case 'Buy':
+            color = '#8884d8';
+            label = 'Buy Amount';
+            break;
+          case 'Sell':
+            color = '#ff7373';
+            label = 'Sell Amount';
+            break;
+          default:
+            color = 'var(--text-color)';
+            label = name;
+        }
+        
+        const formattedValue = name === 'Portfolio Value' 
+          ? `$${value.toFixed(2)}`
+          : `$${value.toFixed(2)}`;
+          
+        return [
+          <span style={{ color, display: 'block' }}>
+            <span style={{ color: 'var(--text-color)', marginRight: '8px' }}>{label}:</span>
+            {formattedValue}
+          </span>,
+          <span style={{ color, fontSize: '12px' }}>
+            {name}
+          </span>
+        ];
+      }}
+      labelFormatter={(label) => (
+        <span style={{ color: 'var(--text-color)', fontWeight: 'bold' }}>
+          Date: {label}
+        </span>
+      )}
+    />
+    <Area
+      type="monotone"
+      dataKey="value"
+      name="Portfolio Value"
+      stroke="var(--primary-color)"
+      fill="url(#colorValue)"
+      fillOpacity={1}
+    />
+    <Bar 
+      dataKey="deposit" 
+      name="Deposit" 
+      fill="#82ca9d"
+      barSize={10}
+    />
+    <Bar 
+      dataKey="withdraw" 
+      name="Withdraw"
+      fill="#ff8042"
+      barSize={10}
+    />
+    <Bar 
+      dataKey="buy" 
+      name="Buy" 
+      fill="#8884d8"
+      barSize={10}
+    />
+    <Bar 
+      dataKey="sell" 
+      name="Sell" 
+      fill="#ff7373"
+      barSize={10}
+    />
+  </ComposedChart>
+</ResponsiveContainer>
                 </div>
               </Card.Body>
             </Card>
