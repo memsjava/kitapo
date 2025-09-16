@@ -9,8 +9,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
-  Legend
+  ResponsiveContainer
 } from 'recharts';
 import './Dashboard.css';
 
@@ -37,6 +36,10 @@ export const Dashboard = () => {
           // Fetch current data
           const currentDataResponse = await fetch('https://trano-vacance.mg/kitapo/data?email=memsjava@gmail.com');
           const currentData = await currentDataResponse.json();
+
+          // Fetch price averages data
+          const priceAveragesResponse = await fetch('https://trano-vacance.mg/kitapo/price-averages?email=memsjava@gmail.com');
+          const priceAveragesData = await priceAveragesResponse.json();
 
           // Create a map of dates to transaction amounts
           const transactionsByDate = {};
@@ -112,8 +115,6 @@ export const Dashboard = () => {
 
           setChartData(processedChartData);
 
-          console.log(chartData);
-
           // Calculate 24h change for portfolio
           const portfolioValues = portfolioData.portfolio_values;
           const todayValue = portfolioValues[portfolioValues.length - 1].total_value_usdt;
@@ -144,9 +145,18 @@ export const Dashboard = () => {
             },
           ]);
 
-          // Process current data for top assets
+          // Process current data for top assets - include USDT and assets that exist in price averages
+          const priceAvgAssets = priceAveragesData.price_averages?.map(avg => avg.asset) || [];
+          const currentAssets = Object.entries(currentData.current_data.assets).filter(([symbol]) => 
+            priceAvgAssets.includes(symbol) || symbol === 'USDT'
+          );
+          
+          console.log('Price Average Assets:', priceAvgAssets);
+          console.log('Current Assets:', Object.keys(currentData.current_data.assets));
+          console.log('Matching Assets:', currentAssets.map(([symbol]) => symbol));
+          
           const assets = await Promise.all(
-            Object.entries(currentData.current_data.assets).map(async ([symbol, value]) => {
+            currentAssets.map(async ([symbol, value]) => {
               let currentPrice = 1;
               let previousPrice = 1;
               let changePercentage = 0;
@@ -163,19 +173,77 @@ export const Dashboard = () => {
                 changePercentage = value === '0' ? 0 : (((currentPrice - previousPrice) / previousPrice) * 100).toFixed(2);
               }
 
-              const valueInUSD = (value * currentPrice).toFixed(4);
+              // Find corresponding price average data first
+              const priceAvgData = priceAveragesData.price_averages?.find(avg => avg.asset === symbol);
+              console.log(`Looking for ${symbol} in price averages:`, priceAvgData);
+              
+              // Handle USDT case (stablecoin with no price average data)
+              if (symbol === 'USDT') {
+                const quantity = parseFloat(value);
+                const currentValue = quantity.toFixed(4); // USDT value is 1:1
+                const avgValue = quantity.toFixed(4); // Same as current for USDT
+                const potentialProfit = 0; // No profit/loss for stablecoin
+                const profitPercentage = '0.00';
+                
+                console.log(`${symbol} (USDT) - Stablecoin:`);
+                console.log(`  Amount: ${quantity}`);
+                console.log(`  Current Value: $${currentValue}`);
+                console.log(`  Price Avg Value: $${avgValue}`);
+                console.log(`  Potential Profit: $${potentialProfit}`);
+                
+                return {
+                  name: symbol,
+                  symbol,
+                  value: `$${currentValue}`,
+                  priceAvgValue: `$${avgValue}`,
+                  currentPrice: '1.0000',
+                  averagePrice: '1.0000',
+                  difference: `$${potentialProfit.toFixed(4)}`,
+                  differencePercentage: `${profitPercentage}%`,
+                  change: '0.00%',
+                  isPositive: true,
+                  isDifferencePositive: true,
+                };
+              }
+              
+              if (!priceAvgData) {
+                console.log(`No price average data found for ${symbol}, skipping`);
+                return null;
+              }
+              
+              // Use quantity from current data to calculate both values
+              const quantity = parseFloat(value); // Amount from current data
+              const currentValue = (quantity * currentPrice).toFixed(4); // amount × current_price
+              const avgValue = (quantity * priceAvgData.average_price).toFixed(4); // amount × avg_price
+              const potentialProfit = parseFloat(currentValue) - parseFloat(avgValue); // Profit if sold at current price
+              const profitPercentage = parseFloat(avgValue) > 0 ? ((potentialProfit / parseFloat(avgValue)) * 100).toFixed(2) : '0.00';
+              
+              console.log(`${symbol} Comparison:`);
+              console.log(`  Amount: ${quantity}`);
+              console.log(`  Current Price: $${currentPrice}`);
+              console.log(`  Average Price: $${priceAvgData.average_price}`);
+              console.log(`  Current Value: $${currentValue} (${quantity} × $${currentPrice})`);
+              console.log(`  Price Avg Value: $${avgValue} (${quantity} × $${priceAvgData.average_price})`);
+              console.log(`  Potential Profit: $${potentialProfit}`);
+              
               const isPositive = changePercentage >= 0;
 
               return {
                 name: symbol,
                 symbol,
-                value: `$${valueInUSD}`,
+                value: `$${currentValue}`,
+                priceAvgValue: `$${avgValue}`,
+                currentPrice: currentPrice.toFixed(4),
+                averagePrice: priceAvgData.average_price.toFixed(4),
+                difference: `$${potentialProfit.toFixed(4)}`,
+                differencePercentage: `${potentialProfit >= 0 ? '+' : ''}${profitPercentage}%`,
                 change: symbol === 'USDT' ? '0.00%' : `${isPositive ? '+' : ''}${changePercentage}%`,
                 isPositive,
+                isDifferencePositive: potentialProfit >= 0,
               };
             })
           );
-          setTopAssets(assets);
+          setTopAssets(assets.filter(asset => asset !== null));
           setDataFetched(true);
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -217,9 +285,6 @@ export const Dashboard = () => {
                 <div style={{ height: '400px' }}>
                 <ResponsiveContainer width="100%" height="100%">
   <ComposedChart data={chartData}>
-    {
-      console.log(chartData)
-    }
     <defs>
       <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
         <stop offset="5%" stopColor="var(--primary-color)" stopOpacity={0.3} />
@@ -334,25 +399,57 @@ export const Dashboard = () => {
             <Card className="asset-card">
               <Card.Body>
                 <h5 className="mb-4">All Assets</h5>
-                {topAssets.map((asset, index) => (
-                  <div key={index} className="asset-item d-flex justify-content-between align-items-center">
-                    <div>
-                      <h6 className="mb-0">{asset.name}</h6>
-                      <small className="text-muted">{asset.symbol}</small>
-                    </div>
-                    <div className="text-end">
-                      <div className="mb-1">{asset.value}</div>
-                      <div className={`change ${asset.isPositive ? 'positive' : 'negative'}`}>
-                        {asset.isPositive ? (
-                          <ArrowUpCircleFill className="me-1" />
-                        ) : (
-                          <ArrowDownCircleFill className="me-1" />
-                        )}
-                        {asset.change}
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                <div className="table-responsive">
+                  <table className="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Asset</th>
+                        <th className="text-end">Current Value</th>
+                        <th className="text-end">Price Average Value</th>
+                        <th className="text-end">Potential Profit</th>
+                        <th className="text-end">24h Change</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {topAssets.map((asset, index) => (
+                        <tr key={index}>
+                          <td>
+                            <div>
+                              <h6 className="mb-0">{asset.name}</h6>
+                              <small className="text-muted">{asset.symbol}</small>
+                            </div>
+                          </td>
+                          <td className="text-end">
+                            <div className="fw-bold">{asset.value}</div>
+                            <small className="text-muted">@ ${asset.currentPrice}</small>
+                          </td>
+                          <td className="text-end">
+                            <div className="fw-bold">{asset.priceAvgValue}</div>
+                            <small className="text-muted">@ ${asset.averagePrice}</small>
+                          </td>
+                          <td className="text-end">
+                            <div className={`fw-bold ${asset.isDifferencePositive ? 'text-success' : 'text-danger'}`}>
+                              {asset.difference}
+                            </div>
+                            <small className={`${asset.isDifferencePositive ? 'text-success' : 'text-danger'}`}>
+                              {asset.differencePercentage}
+                            </small>
+                          </td>
+                          <td className="text-end">
+                            <div className={`change ${asset.isPositive ? 'positive' : 'negative'}`}>
+                              {asset.isPositive ? (
+                                <ArrowUpCircleFill className="me-1" />
+                              ) : (
+                                <ArrowDownCircleFill className="me-1" />
+                              )}
+                              {asset.change}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </Card.Body>
             </Card>
           </Col>
